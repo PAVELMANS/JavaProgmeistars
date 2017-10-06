@@ -60,7 +60,9 @@ public class Main {
         } while ((st.stoneAmL > 0) && (st.stoneAmR > 0));
 
         System.out.println("The game has ended. Last winner is player " + (st.previousWinner + 1));
-        
+
+        new Figures().main();
+
     }
 
 }
