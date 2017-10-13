@@ -2,6 +2,14 @@ package com.pivanovs;
 
 public class Main {
 
+    public static class Point {
+        int i, j;
+        Point (int x0, int y0) {
+            i = x0;
+            j = y0;
+        }
+    }
+
     public static String codeCaesar(String input) {
         String output = "";
         for (char iCh : input.toCharArray()) {
@@ -27,7 +35,6 @@ public class Main {
                 newKeyWord += keyWord;
             }
             keyWord = newKeyWord;
-            System.out.println(keyWord);
         }
 
         for (int i = 0; i < input.length(); i++) {
@@ -35,21 +42,122 @@ public class Main {
                 int codeICh = (int) input.charAt(i);
                 int codeKeyCh = (int) keyWord.charAt(i);
                 output += (char) (((codeICh - 65) + (codeKeyCh - 65)) % 26 + 65);
+            } else {
+                output += input.charAt(i);
             }
         }
         return output;
     }
 
-    public static String codePlayfair(String input, String keyWord) {
+    public static Point findInMatrix(char ch) {
+        Point res;
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                if (matrix[i][j] == ch) {
+                    res = new Point(i, j);
+                    return res;
+                }
+            }
+        }
+        res = new Point(5,5);
+        return res;
+    }
 
+    static char[][] matrix = new char[5][5];
+
+    public static String codePlayfair(String input, String keyWord) {
+        String output = "";
+        input = input.toUpperCase().replaceAll(" ", "");
+        keyWord = keyWord.toUpperCase();
+
+        //matricas konstruēšana
+        String abc = "";
+        for (int i = 65; i < 91; i++) {
+            if (i == 74) {
+                continue;
+            }
+            abc += (char) i;
+        }
+        char temp;
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                if (keyWord.length() > 0) {
+                    matrix[i][j] = keyWord.charAt(0);
+                    temp = keyWord.charAt(0);
+                    abc = abc.replaceAll(Character.toString(temp), "");
+                    keyWord = keyWord.replaceAll(Character.toString(temp), "");
+                    if (temp == 'I') {
+                        abc = abc.replaceAll("J", "");
+                        keyWord = keyWord.replaceAll("J", "");
+                    } else if (temp == 'J') {
+                        abc = abc.replaceAll("I", "");
+                        keyWord = keyWord.replaceAll("I", "");
+                    }
+                } else {
+                    matrix[i][j] = abc.charAt(0);
+                    abc = abc.substring(1);
+                }
+            }
+        }
+
+        //šifrēšana
+        //input vārda sadalīšana bīgrammās
+        while (!input.isEmpty()) {
+            if (input.length() == 1) {
+                input += "X";
+            }
+            if (input.charAt(0) == input.charAt(1)) {
+                input = input.charAt(0) + "X" + input.substring(1);
+            }
+            Point pCh0 = findInMatrix(input.charAt(0));
+            Point pCh1 = findInMatrix(input.charAt(1));
+
+            if (pCh0.i == pCh1.i) {  //ja vienā rindā
+                int row = pCh0.i;
+                if (pCh0.j == 4) {
+                    output += matrix[row][0];
+                } else {
+                    output += matrix[row][pCh0.j + 1];
+                }
+                if (pCh1.j == 4) {
+                    output += matrix[row][0];
+                } else {
+                    output += matrix[row][pCh1.j + 1];
+                }
+            } else if (pCh0.j == pCh1.j) {  //ja vienā kolonnā
+                int column = pCh0.j;
+                if (pCh0.i == 4) {
+                    output += matrix[0][column];
+                } else {
+                    output += matrix[pCh0.i + 1][column];
+                }
+                if (pCh1.i == 4) {
+                    output += matrix[0][column];
+                } else {
+                    output += matrix[pCh1.i + 1][column];
+                }
+            } else { //pēc taisnstūra leņķiem
+                output += matrix[pCh0.i][pCh1.j];
+                output += matrix[pCh1.i][pCh0.j];
+            }
+
+            if (input.length() > 2) {
+                input = input.substring(2);
+            } else {
+                input = "";
+            }
+        }
+
+        return output;
     }
 
     public static void main(String[] args) {
 
         String input = "Hello, world!";
         System.out.println(codeCaesar("abc"));
-        input = "attackatdawn";
-        String keyWord = "lemon";
+        input = "IDIOCY OFTEN LOOKS LIKE INTELLIGENCE";
+        String keyWord = "Wheatson";
         System.out.println(codeVigenere(input, keyWord));
+        System.out.println(codePlayfair(input, keyWord));
     }
 }
