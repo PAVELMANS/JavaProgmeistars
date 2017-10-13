@@ -41,7 +41,7 @@ public class Main {
     }
 
     public static String codePlayfair(String input, String keyWord) {
-        
+
     }
 
     public static void main(String[] args) {
