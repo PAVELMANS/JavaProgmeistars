@@ -154,7 +154,7 @@ public class Main {
                 }
             }
         }
-        res = new Point(5, 5);
+        res = new Point(0, 0);
         return res;
     }
 
@@ -163,20 +163,24 @@ public class Main {
         input = input.toUpperCase();
 
         //making the matrixX
-        int chIndex = 65;
+        int chIndex = 64;
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                if ((char) chIndex == 'J') {
-                    continue;
+                chIndex++;
+                if (((char) chIndex == 'J') || ((char) chIndex == 'I')) {
+                    matrixX[i][j] = 'I';
+                    chIndex++;
+                } else {
+                    matrixX[i][j] = (char) chIndex;
                 }
-                matrixX[i][j] = (char) chIndex;
+                //System.out.println(matrixX[i][j]);
             }
         }
 
         //first method
         Point pCh;
-        for (char ch : input.toCharArray()) {
-            pCh = findInMatrixX(ch);
+        for (int i = 0; i < input.length(); i++) {
+            pCh = findInMatrixX(input.charAt(i));
             if (pCh.i != 4) {
                 result += matrixX[pCh.i + 1][pCh.j];
             } else {
@@ -185,29 +189,6 @@ public class Main {
         }
         System.out.println("Result of the first method: " + result);
         result = "";
-
-        //second method
-        String horizontal = "";
-        String vertical = "";
-        for (char ch : input.toCharArray()) {
-            pCh = findInMatrixX(ch);
-            horizontal += pCh.j;
-            vertical += pCh.i;
-        }
-        horizontal += vertical;
-        for (int i = 0; i < horizontal.length(); i += 2) {
-            result += matrixX[(int) horizontal.charAt(i)][(int) horizontal.charAt(i + 1)];
-        }
-        System.out.println("Result of the second method: " + result);
-        result = "";
-
-        //third method
-        char ch = horizontal.charAt(0);
-        horizontal = horizontal.substring(1) + ch;
-        for (int i = 0; i < horizontal.length(); i += 2) {
-            result += matrixX[(int) horizontal.charAt(i)][(int) horizontal.charAt(i + 1)];
-        }
-
         return result;
     }
 
@@ -219,7 +200,7 @@ public class Main {
         String keyWord = "Wheatson";
         System.out.println(codeVigenere(input, keyWord));
         System.out.println(codePlayfair(input, keyWord));
-        System.out.println(codePolybius(input));
+        System.out.println(codePolybius("sometext"));
     }
 
     public static class Point {
