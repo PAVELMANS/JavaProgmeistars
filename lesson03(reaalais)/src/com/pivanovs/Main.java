@@ -2,13 +2,8 @@ package com.pivanovs;
 
 public class Main {
 
-    public static class Point {
-        int i, j;
-        Point (int x0, int y0) {
-            i = x0;
-            j = y0;
-        }
-    }
+    static char[][] matrix = new char[5][5];
+    static char[][] matrixX = new char[5][5];
 
     public static String codeCaesar(String input) {
         String output = "";
@@ -59,11 +54,9 @@ public class Main {
                 }
             }
         }
-        res = new Point(5,5);
+        res = new Point(5, 5);
         return res;
     }
-
-    static char[][] matrix = new char[5][5];
 
     public static String codePlayfair(String input, String keyWord) {
         String output = "";
@@ -151,7 +144,72 @@ public class Main {
         return output;
     }
 
-    //public static String codeVernam()
+    public static Point findInMatrixX(char ch) {
+        Point res;
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                if (matrixX[i][j] == ch) {
+                    res = new Point(i, j);
+                    return res;
+                }
+            }
+        }
+        res = new Point(5, 5);
+        return res;
+    }
+
+    public static String codePolybius(String input) {
+        String result = "";
+        input = input.toUpperCase();
+
+        //making the matrixX
+        int chIndex = 65;
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                if ((char) chIndex == 'J') {
+                    continue;
+                }
+                matrixX[i][j] = (char) chIndex;
+            }
+        }
+
+        //first method
+        Point pCh;
+        for (char ch : input.toCharArray()) {
+            pCh = findInMatrixX(ch);
+            if (pCh.i != 4) {
+                result += matrixX[pCh.i + 1][pCh.j];
+            } else {
+                result += matrixX[0][pCh.j];
+            }
+        }
+        System.out.println("Result of the first method: " + result);
+        result = "";
+
+        //second method
+        String horizontal = "";
+        String vertical = "";
+        for (char ch : input.toCharArray()) {
+            pCh = findInMatrixX(ch);
+            horizontal += pCh.j;
+            vertical += pCh.i;
+        }
+        horizontal += vertical;
+        for (int i = 0; i < horizontal.length(); i += 2) {
+            result += matrixX[(int) horizontal.charAt(i)][(int) horizontal.charAt(i + 1)];
+        }
+        System.out.println("Result of the second method: " + result);
+        result = "";
+
+        //third method
+        char ch = horizontal.charAt(0);
+        horizontal = horizontal.substring(1) + ch;
+        for (int i = 0; i < horizontal.length(); i += 2) {
+            result += matrixX[(int) horizontal.charAt(i)][(int) horizontal.charAt(i + 1)];
+        }
+
+        return result;
+    }
 
     public static void main(String[] args) {
 
@@ -161,5 +219,15 @@ public class Main {
         String keyWord = "Wheatson";
         System.out.println(codeVigenere(input, keyWord));
         System.out.println(codePlayfair(input, keyWord));
+        System.out.println(codePolybius(input));
+    }
+
+    public static class Point {
+        int i, j;
+
+        Point(int x0, int y0) {
+            i = x0;
+            j = y0;
+        }
     }
 }
