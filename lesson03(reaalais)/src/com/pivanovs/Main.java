@@ -151,6 +151,8 @@ public class Main {
         return output;
     }
 
+    //public static String codeVernam()
+
     public static void main(String[] args) {
 
         String input = "Hello, world!";
