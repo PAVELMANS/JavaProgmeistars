@@ -9,7 +9,11 @@ public class GenericQueue {
 
         PriorityQueue<Integer> q1 = new PriorityQueue<>();
         PriorityQueue<Integer> q2 = new PriorityQueue<>();
-        Tree
+        Random rand = new Random();
+        for (int i = 0; i < 8; i++) {
+            q1.add(rand.nextInt(15));
+        }
+        System.out.println(q1.comparator());
 
         System.out.println("length of the first queue: ");
     }
