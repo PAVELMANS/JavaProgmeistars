@@ -28,13 +28,11 @@ public class Controller {
             String path = pathField.getText();
             file = new File(path);
 
-            FileWriter fw = new FileWriter(file);
             FileReader fr = new FileReader(file);
-            pw = new PrintWriter(fw);
             br = new BufferedReader(fr);
             List<String> lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8);
             while (!lines.isEmpty()) {
-                textArea.setText(lines.get(0));
+                textArea.setText(textArea.getText() + lines.get(0));
                 lines.remove(0);
             }
         } catch (IOException e) {
@@ -53,6 +51,11 @@ public class Controller {
     }
 
     public void writeTextIntoFile(MouseEvent mouseEvent) {
-        pw.write(textArea.getText());
+        try {
+            FileWriter fw = new FileWriter(file);
+            pw = new PrintWriter(fw);
+            pw.write(textArea.getText().replaceAll("\n", "\r\n"));
+            pw.flush();
+        } catch (IOException e) {}
     }
 }
